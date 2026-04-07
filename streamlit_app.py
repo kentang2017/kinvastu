@@ -140,8 +140,8 @@ elif page == "🪐 個人化 Astro-Vastu":
             st.markdown(f"**姓名：** {name}")
             st.markdown(f"**出生地點：** {birth_place}")
         with info_col2:
-            st.markdown("**出生日期：** ***（已遮蔽）")
-            st.markdown("**出生時間：** ***（已遮蔽）")
+            st.markdown("**出生日期：** ***（已遮蔽）***")
+            st.markdown("**出生時間：** ***（已遮蔽）***")
             st.markdown(f"**UTC 偏移：** {resolved_offset}")
 
         # ---- 占星計算 ----
