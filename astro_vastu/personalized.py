@@ -104,8 +104,8 @@ def personalized_astro_vastu(
     print("  🪐 個人化 Astro-Vastu 命盤分析報告")
     print(separator)
     print(f"  姓名：{name}")
-    print("  出生日期：***（已遮蔽）")
-    print("  出生時間：***（已遮蔽）")
+    print(f"  出生日期：{birth_date}")
+    print("  出生時間：***（已遮蔽保護隱私）")
     print(f"  出生地點：{birth_place}")
     print(f"  UTC 偏移：{resolved_offset}")
     print(separator)
@@ -169,10 +169,14 @@ def personalized_astro_vastu(
     ruler = LAGNA_RULER.get(result.lagna_sign, "Jupiter")
     ruler_direction = PLANET_DIRECTION.get(ruler, "東北")
     ruler_zh = PLANET_ZH.get(ruler, "")
+    recommended_facing = LAGNA_FACING.get(
+        result.lagna_sign, "東方 — 通用推薦方位",
+    )
 
     energy_notes: list[str] = [
-        f"1. 您的上升星座為 {lagna_zh}，Vastu 上最重要的方位是"
-        f"「{ruler_direction}」（{ruler_zh} 主宰方位）。",
+        f"1. 您的上升星座為 {lagna_zh}，主宰行星為"
+        f"{ruler_zh}，Vastu 上最重要的方位是"
+        f"「{ruler_direction}」。推薦房屋朝向為「{recommended_facing.split('—')[0].strip()}」。",
         "2. 東北方（Īśānya）無論任何命盤都必須保持潔淨開闊，"
         "這是宇宙正能量的入口。",
         "3. 中央 Brahmasthan 區域切勿放置重物或設置柱子，"

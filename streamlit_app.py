@@ -145,8 +145,8 @@ elif page == "🪐 個人化 Astro-Vastu":
             st.markdown(f"**姓名：** {name}")
             st.markdown(f"**出生地點：** {birth_place}")
         with info_col2:
-            st.markdown("**出生日期：** ***（已遮蔽）***")
-            st.markdown("**出生時間：** ***（已遮蔽）***")
+            st.markdown(f"**出生日期：** {birth_date_str}")
+            st.markdown("**出生時間：** ***（已遮蔽保護隱私）***")
             st.markdown(f"**UTC 偏移：** {resolved_offset}")
 
         # ---- 占星計算 ----
@@ -194,7 +194,10 @@ elif page == "🪐 個人化 Astro-Vastu":
         details = LAGNA_VASTU_DETAILS.get(
             result.lagna_sign, LAGNA_VASTU_DETAILS["Aries"]
         )
-        rec_data = [{"建議項目": key, "詳細說明": value} for key, value in details.items()]
+        rec_data = [
+            {"建議項目": key, "詳細說明": value[0], "傳統理由": value[1]}
+            for key, value in details.items()
+        ]
         rec_df = pd.DataFrame(rec_data)
         st.dataframe(rec_df, use_container_width=True, hide_index=True)
 
@@ -212,9 +215,12 @@ elif page == "🪐 個人化 Astro-Vastu":
         ruler = LAGNA_RULER.get(result.lagna_sign, "Jupiter")
         ruler_direction = PLANET_DIRECTION.get(ruler, "東北")
         ruler_zh = PLANET_ZH.get(ruler, "")
+        recommended_facing = LAGNA_FACING.get(
+            result.lagna_sign, "東方 — 通用推薦方位",
+        )
 
         energy_notes = [
-            f"1. 您的上升星座為 {lagna_zh}，Vastu 上最重要的方位是「{ruler_direction}」（{ruler_zh} 主宰方位）。",
+            f"1. 您的上升星座為 {lagna_zh}，主宰行星為{ruler_zh}，Vastu 上最重要的方位是「{ruler_direction}」。推薦房屋朝向為「{recommended_facing.split('—')[0].strip()}」。",
             "2. 東北方（Īśānya）無論任何命盤都必須保持潔淨開闊，這是宇宙正能量的入口。",
             "3. 中央 Brahmasthan 區域切勿放置重物或設置柱子，以免阻斷能量流通。",
             "4. 床頭朝向以南方為最佳（頭南腳北），可順應地球磁場，有助安眠。",

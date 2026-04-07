@@ -526,7 +526,7 @@ _LAGNA_FACING: dict[str, str] = {
     "Aries": "東方 — 火象上升適合迎接晨曦能量",
     "Taurus": "北方 — 金牛上升需穩定財運能量",
     "Gemini": "北方 — 風象上升適合北方流動能量",
-    "Cancer": "東方 — 水象上升受益於東方的 Prāṇa",
+    "Cancer": "西北（最佳）或東方（次佳）— 月亮主宰巨蟹，西北為月亮方位",
     "Leo": "東方 — 太陽主宰，面東迎日最吉",
     "Virgo": "北方 — 水星主宰，北方為水星方位",
     "Libra": "西方 — 金星主宰，西方為社交方位",
@@ -570,13 +570,13 @@ _LAGNA_VASTU_DETAILS: dict[str, dict[str, str]] = {
         "避開區域": "東南方不宜有過多風元素",
     },
     "Cancer": {
-        "大門位置": "東方或北方",
-        "主臥室": "西南方",
+        "大門位置": "西北方或北方",
+        "主臥室": "西南方或西方",
         "財位 (Kubera Sthana)": "北方",
         "祈禱室 (Pūjā Room)": "東北方 — 水象上升更需靈性空間",
         "廚房": "東南方",
-        "床頭朝向": "東方",
-        "加強區域": "西北方 — 月亮方位，加強情感安穩",
+        "床頭朝向": "南方或西方",
+        "加強區域": "西北方 — 月亮方位，核心能量所在",
         "避開區域": "南方不宜有水池",
     },
     "Leo": {
@@ -779,8 +779,8 @@ def personalized_astro_vastu(
     print("  🪐 個人化 Astro-Vastu 命盤分析報告")
     print(separator)
     print(f"  姓名：{name}")
-    print(f"  出生日期：***（已遮蔽）")
-    print(f"  出生時間：***（已遮蔽）")
+    print(f"  出生日期：{birth_date}")
+    print("  出生時間：***（已遮蔽保護隱私）")
     print(f"  出生地點：{birth_place}")
     print(f"  UTC 偏移：{utc_offset}")
     print(separator)
@@ -933,9 +933,9 @@ def personalized_astro_vastu(
 
     moon_tips: dict[str, str] = {
         "火": (
-            "月亮在火象星座：情緒活躍，適合在南方或東方放置\n"
-            "      舒緩系色調（藍色、白色）的裝飾品以平衡火性能量。\n"
-            "      臥室宜避免過多紅色或橘色。"
+            "月亮在火象星座：情緒充滿樂觀、探索與行動力。\n"
+            "      適合在東北方或東方加強活力空間，顏色以暖色調（金色、橙黃、赤銅色）為主。\n"
+            "      避免過度沉重陰暗的裝飾，保持空間開闊明亮以呼應火象能量。"
         ),
         "土": (
             "月亮在土象星座：情緒穩定，適合在西南方加強\n"
@@ -961,10 +961,17 @@ def personalized_astro_vastu(
     print("  ⚡ 綜合能量分析與特別提醒")
     print(separator)
 
+    ruler = _get_lagna_ruler(lagna_sign)
+    ruler_direction = _PLANET_DIRECTION.get(ruler, "東北")
+    ruler_zh = _PLANET_ZH.get(ruler, "")
+    recommended_facing = _LAGNA_FACING.get(
+        lagna_sign, "東方 — 通用推薦方位",
+    )
+
     energy_notes: list[str] = [
-        f"1. 您的上升星座為 {lagna_zh}，Vastu 上最重要的方位是"
-        f"「{_PLANET_DIRECTION.get(_get_lagna_ruler(lagna_sign), '東北')}」"
-        f"（{_PLANET_ZH.get(_get_lagna_ruler(lagna_sign), '')} 主宰方位）。",
+        f"1. 您的上升星座為 {lagna_zh}，主宰行星為"
+        f"{ruler_zh}，Vastu 上最重要的方位是"
+        f"「{ruler_direction}」。推薦房屋朝向為「{recommended_facing.split('—')[0].strip()}」。",
         "2. 東北方（Īśānya）無論任何命盤都必須保持潔淨開闊，"
         "這是宇宙正能量的入口。",
         "3. 中央 Brahmasthan 區域切勿放置重物或設置柱子，"
