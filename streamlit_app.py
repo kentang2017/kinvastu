@@ -11,6 +11,7 @@
 
 from __future__ import annotations
 
+import datetime
 import streamlit as st
 import pandas as pd
 
@@ -84,7 +85,11 @@ elif page == "🪐 個人化 Astro-Vastu":
         col1, col2 = st.columns(2)
         with col1:
             name = st.text_input("姓名", value="", placeholder="例如：王小明")
-            birth_date = st.date_input("出生日期")
+            birth_date = st.date_input(
+                "出生日期",
+                min_value=datetime.date(1900, 1, 1),
+                max_value=datetime.date(2099, 12, 31),
+            )
             birth_time = st.time_input("出生時間")
         with col2:
             birth_place = st.text_input("出生地點", value="", placeholder="例如：臺北")
