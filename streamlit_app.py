@@ -15,8 +15,11 @@ import datetime
 import streamlit as st
 import pandas as pd
 
+import streamlit.components.v1 as components
+
 from astro_vastu.core.vastu_table import detailed_vastu_table
 from astro_vastu.core.brahmasthan import BRAHMASTHAN_INFO
+from astro_vastu.core.vastu_chart import render_vastu_mandala_html
 from astro_vastu.astro.calculator import AstroCalculator
 from astro_vastu.astro.mappings import (
     LAGNA_FACING,
@@ -191,6 +194,14 @@ elif page == "🪐 個人化 Astro-Vastu":
         facing = LAGNA_FACING.get(result.lagna_sign, "東方 — 通用推薦方位")
         st.markdown(f"**🧭 房屋推薦朝向：** {facing}")
 
+        # ---- Vastu Purusha Mandala 圖表 ----
+        ruler = LAGNA_RULER.get(result.lagna_sign, "Jupiter")
+        mandala_html = render_vastu_mandala_html(
+            lagna_sign=result.lagna_sign,
+            lagna_ruler=ruler,
+        )
+        components.html(mandala_html, height=920)
+
         details = LAGNA_VASTU_DETAILS.get(
             result.lagna_sign, LAGNA_VASTU_DETAILS["Aries"]
         )
@@ -212,7 +223,6 @@ elif page == "🪐 個人化 Astro-Vastu":
         st.divider()
         st.subheader("⚡ 綜合能量分析與特別提醒")
 
-        ruler = LAGNA_RULER.get(result.lagna_sign, "Jupiter")
         ruler_direction = PLANET_DIRECTION.get(ruler, "東北")
         ruler_zh = PLANET_ZH.get(ruler, "")
         recommended_facing = LAGNA_FACING.get(
