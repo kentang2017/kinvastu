@@ -105,7 +105,7 @@ elif page == "🪐 個人化 Astro-Vastu":
                 help="提供精確的 IANA 時區名稱可更準確處理夏令時。留空則根據經度估算。",
             )
         with col4:
-            use_astro = st.checkbox("啟用 VedAstro 精確計算", value=True)
+            use_astro = st.checkbox("啟用精確吠陀占星計算", value=True)
 
         submitted = st.form_submit_button("🔮 開始分析", use_container_width=True)
 
@@ -224,11 +224,11 @@ elif page == "🪐 個人化 Astro-Vastu":
         for note in energy_notes:
             st.markdown(f"- {note}")
 
-        # ---- VedAstro 提示 ----
+        # ---- 精確計算提示 ----
         if not result.used_vedastro:
             st.divider()
             st.warning(
-                "💡 以上結果基於簡化推估。建議安裝 VedAstro（`pip install vedastro`）以獲得"
+                "💡 以上結果基於簡化推估。建議安裝 pyswisseph（`pip install pyswisseph`）以獲得"
                 "精確的吠陀占星計算與更準確的個人化建議。"
             )
 

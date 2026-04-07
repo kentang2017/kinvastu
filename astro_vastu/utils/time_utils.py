@@ -1,7 +1,7 @@
 """時間與時區處理工具。
 
 使用 ``zoneinfo``（Python 3.9+）處理精確時區與夏令時間，
-並提供 VedAstro 格式化、UTC 偏移估算等功能。
+並提供 UTC 偏移估算等功能。
 """
 
 from __future__ import annotations

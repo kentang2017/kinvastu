@@ -9,7 +9,7 @@ astro_vastu — 超級進階 Astro-Vastu 模組 v2.0.0
 📦 安裝依賴::
 
     pip install pandas tabulate
-    pip install vedastro        # 可選：精確吠陀占星計算
+    pip install pyswisseph      # 精確吠陀占星計算
 
 📖 快速開始::
 

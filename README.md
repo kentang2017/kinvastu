@@ -11,10 +11,7 @@
 
 ```bash
 # 必要依賴
-pip install pandas tabulate
-
-# 可選：精確吠陀占星計算（VedAstro）
-pip install vedastro
+pip install pandas tabulate pyswisseph
 ```
 
 ## 🖥️ Streamlit 互動介面
@@ -94,7 +91,7 @@ astro_vastu/
 │   ├── vastu_table.py     # detailed_vastu_table()，支援 console / DataFrame
 │   └── brahmasthan.py     # 中央梵天位詳細說明
 ├── astro/                 # 吠陀占星模組（可選）
-│   ├── calculator.py      # 封裝 VedAstro，含優雅 fallback
+│   ├── calculator.py      # 封裝 pyswisseph 吠陀占星計算，含優雅 fallback
 │   └── mappings.py        # 星座、行星、方位對應表
 ├── models/                # 資料模型
 │   └── config.py          # BirthData / VastuReportConfig dataclass
