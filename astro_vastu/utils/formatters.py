@@ -31,16 +31,19 @@ def build_planet_table(planet_data: list[dict[str, str]]) -> str:
     )
 
 
-def build_recommendation_table(details: dict[str, str]) -> str:
-    """將 Vastu 建議字典格式化為表格字串。
+def build_recommendation_table(details: dict[str, tuple[str, str]]) -> str:
+    """將 Vastu 建議字典格式化為三欄表格字串。
 
     Args:
-        details: 建議項目與說明的字典。
+        details: 建議項目與 ``(詳細說明, 傳統理由)`` 元組的字典。
 
     Returns:
-        格式化的表格字串。
+        包含「建議項目」「詳細說明」「傳統理由」三欄的格式化表格字串。
     """
-    data = [{"建議項目": key, "詳細說明": value} for key, value in details.items()]
+    data = [
+        {"建議項目": key, "詳細說明": value[0], "傳統理由": value[1]}
+        for key, value in details.items()
+    ]
     df = pd.DataFrame(data)
     return tabulate(
         df,
