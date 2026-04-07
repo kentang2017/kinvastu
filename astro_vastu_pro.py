@@ -420,7 +420,7 @@ def detailed_vastu_table(directions: int = 8) -> None:
         # E, ENE, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW, N, NNE, NE
         order_main = [0, 1, 2, 3, 4, 5, 6, 7]  # 八大方位在 _VASTU_DATA_8 的索引
         order_sub = [0, 1, 2, 3, 4, 5, 6, 7]    # 子方位在 _VASTU_DATA_SUB8 的索引
-        # 完整順時針：E, ENE, ESE, SE, SSE, SSW, S, SSW, SW, WSW, W, WNW, NW, NNW, N, NNE, NE
+        # 完整順時針：E, ENE, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW, N, NNE, NE
         # 對應穿插邏輯：每個主方位後接一個子方位
         for i in range(8):
             merged.append(_VASTU_DATA_8[order_main[i]])
@@ -768,9 +768,9 @@ def personalized_astro_vastu(
     print("  🪐 個人化 Astro-Vastu 命盤分析報告")
     print(separator)
     print(f"  姓名：{name}")
-    print(f"  出生日期：{birth_date}")
-    print(f"  出生時間：{birth_time}")
-    print(f"  出生地點：{birth_place}（{latitude}°N, {longitude}°E）")
+    print(f"  出生日期：***（已遮蔽）")
+    print(f"  出生時間：***（已遮蔽）")
+    print(f"  出生地點：{birth_place}")
     print(f"  UTC 偏移：{utc_offset}")
     print(separator)
 
@@ -854,9 +854,6 @@ def personalized_astro_vastu(
         except Exception as e:
             print(f"\n  ⚠️  VedAstro API 呼叫失敗：{e}")
             print("      將使用簡化推估方法作為替代。\n")
-            _VEDASTRO_AVAILABLE_LOCAL = False
-    else:
-        _VEDASTRO_AVAILABLE_LOCAL = False
 
     if not used_vedastro:
         if not _VEDASTRO_AVAILABLE:
