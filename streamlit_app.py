@@ -36,12 +36,12 @@ from astro_vastu.utils.time_utils import (
 
 # ─── 頁面設定 ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="🕉️ Astro-Vastu 風水命盤分析",
+    page_title="🕉️ 堅瓦斯圖 Kinvastu — 印度吠陀風水",
     page_icon="🕉️",
     layout="wide",
 )
 
-st.title("🕉️ Astro-Vastu 風水命盤分析系統")
+st.title("🕉️ 堅瓦斯圖 Kinvastu — 印度吠陀風水")
 st.caption("結合 Vastu Shastra（印度建築風水）與 Vedic Jyotish（吠陀占星）")
 
 # ─── 側邊欄導覽 ───────────────────────────────────────────
@@ -96,7 +96,7 @@ elif page == "🪐 個人化 Astro-Vastu":
             timezone_str = st.text_input(
                 "IANA 時區（可選）",
                 value="",
-                placeholder="例如：Asia/Taipei",
+                placeholder="例如：Asia/Hong Kong",
                 help="提供精確的 IANA 時區名稱可更準確處理夏令時。留空則根據經度估算。",
             )
         with col4:
