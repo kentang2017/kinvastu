@@ -55,7 +55,8 @@ def personalized_astro_vastu(
 ) -> None:
     """根據個人出生資料，結合吠陀占星命盤產生個人化 Vastu 建議。
 
-    優先使用 VedAstro 庫計算精確命盤。若 VedAstro 未安裝或 API 呼叫失敗，
+    優先使用 pyswisseph 計算精確命盤（Lahiri Ayanamsa 恆星黃道）。
+    若 pyswisseph 未安裝或計算失敗，
     將使用簡化的 fallback 推估方法並清楚提示使用者。
 
     Args:
@@ -189,7 +190,7 @@ def personalized_astro_vastu(
 
     if not result.used_vedastro:
         print("\n  💡 溫馨提示：以上結果基於簡化推估。")
-        print("     建議安裝 VedAstro（pip install vedastro）以獲得")
+        print("     建議安裝 pyswisseph（pip install pyswisseph）以獲得")
         print("     精確的吠陀占星計算與更準確的個人化建議。")
 
     print("\n  🙏 Om Vastu Devaya Namah | 願 Vastu 之神保佑您的居所平安吉祥 🙏")

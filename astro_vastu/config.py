@@ -28,7 +28,7 @@ class AppSettings:
     language: str = "zh-TW"
     use_astro: bool = True
     fallback_notice: str = (
-        "⚠️  簡化估計模式 — 建議安裝占星庫（pip install vedastro）取得精確結果"
+        "⚠️  簡化估計模式 — 建議安裝占星庫（pip install pyswisseph）取得精確結果"
     )
 
 

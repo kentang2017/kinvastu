@@ -1,7 +1,10 @@
-"""占星計算器 — 封裝 VedAstro 與 Fallback 邏輯。
+"""占星計算器 — 封裝 pyswisseph 與 Fallback 邏輯。
 
-VedAstro 為可選依賴。若未安裝或 API 呼叫失敗，
+使用 pyswisseph 以恆星黃道 (sidereal zodiac) 搭配 Lahiri 歲差
+計算精確吠陀占星命盤。若 pyswisseph 未安裝，
 自動切換至簡化推估方法並清楚提示使用者。
+
+參考：https://github.com/kentang2017/kinastro
 
 典型用法::
 
@@ -20,7 +23,7 @@ VedAstro 為可選依賴。若未安裝或 API 呼叫失敗，
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Optional
 
 from astro_vastu.astro.mappings import (
     MOON_SIGNS_BY_MONTH,
@@ -30,26 +33,40 @@ from astro_vastu.astro.mappings import (
     ZODIAC_ZH,
 )
 from astro_vastu.exceptions import AstroCalculationError
-from astro_vastu.utils.time_utils import format_vedastro_time, longitude_to_utc_offset
+from astro_vastu.utils.time_utils import longitude_to_utc_offset
 
-# ---------- VedAstro 動態匯入 ----------
-_VEDASTRO_AVAILABLE: bool = False
+# ---------- pyswisseph 動態匯入 ----------
+_SWE_AVAILABLE: bool = False
 try:
-    from vedastro import (  # type: ignore[import-untyped]
-        Calculate,
-        GeoLocation,
-        PlanetName,
-        Time,
-    )
+    import swisseph as swe  # type: ignore[import-untyped]
 
-    _VEDASTRO_AVAILABLE = True
+    _SWE_AVAILABLE = True
 except ImportError:
     pass
 
+# ---------- 恆星黃道十二星座 (英文名稱，對應 ZODIAC_ZH 鍵) ----------
+_SIGNS = [
+    "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+    "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+]
 
-def is_vedastro_available() -> bool:
-    """檢查 VedAstro 庫是否可用。"""
-    return _VEDASTRO_AVAILABLE
+# ---------- 九曜 pyswisseph 對應 ----------
+_SWE_PLANETS: dict[str, int] = {}
+if _SWE_AVAILABLE:
+    _SWE_PLANETS = {
+        "Sun": swe.SUN,
+        "Moon": swe.MOON,
+        "Mars": swe.MARS,
+        "Mercury": swe.MERCURY,
+        "Jupiter": swe.JUPITER,
+        "Venus": swe.VENUS,
+        "Saturn": swe.SATURN,
+    }
+
+
+def is_swe_available() -> bool:
+    """檢查 pyswisseph 庫是否可用。"""
+    return _SWE_AVAILABLE
 
 
 @dataclass
@@ -60,7 +77,7 @@ class AstroResult:
         lagna_sign: 上升星座英文名稱。
         moon_sign: 月亮星座英文名稱。
         planet_info: 九曜行星位置資訊列表。
-        used_vedastro: 是否使用了 VedAstro 精確計算。
+        used_vedastro: 是否使用了精確占星計算（pyswisseph）。
         messages: 計算過程中的提示訊息。
     """
 
@@ -72,7 +89,7 @@ class AstroResult:
 
 
 class AstroCalculator:
-    """占星計算器，封裝 VedAstro 與 Fallback 邏輯。
+    """占星計算器，封裝 pyswisseph 與 Fallback 邏輯。
 
     Args:
         use_astro: 是否啟用占星計算。若為 ``False``，直接使用 Fallback。
@@ -108,23 +125,23 @@ class AstroCalculator:
 
         result = AstroResult()
 
-        if self._use_astro and _VEDASTRO_AVAILABLE:
+        if self._use_astro and _SWE_AVAILABLE:
             try:
-                self._compute_vedastro(
-                    result, birth_date, birth_time, birth_place,
+                self._compute_swe(
+                    result, birth_date, birth_time,
                     latitude, longitude, utc_offset,
                 )
                 return result
             except Exception as exc:
                 result.messages.append(
-                    f"⚠️  VedAstro API 呼叫失敗：{exc}\n"
+                    f"⚠️  pyswisseph 計算失敗：{exc}\n"
                     "      將使用簡化推估方法作為替代。"
                 )
 
-        if self._use_astro and not _VEDASTRO_AVAILABLE:
+        if self._use_astro and not _SWE_AVAILABLE:
             result.messages.append(
-                "⚠️  VedAstro 庫未安裝。請執行以下命令安裝：\n"
-                "      pip install vedastro\n"
+                "⚠️  pyswisseph 庫未安裝。請執行以下命令安裝：\n"
+                "      pip install pyswisseph\n"
                 "      安裝後即可獲得精確的吠陀占星計算。"
             )
             result.messages.append(
@@ -135,69 +152,78 @@ class AstroCalculator:
         return result
 
     # ------------------------------------------------------------------
-    # VedAstro 精確計算
+    # pyswisseph 精確計算（參考 kinastro 印度占星模組）
     # ------------------------------------------------------------------
-    def _compute_vedastro(
+    def _compute_swe(
         self,
         result: AstroResult,
         birth_date: str,
         birth_time: str,
-        birth_place: str,
         latitude: float,
         longitude: float,
         utc_offset: str,
     ) -> None:
-        """使用 VedAstro 進行精確吠陀計算。"""
-        geo = GeoLocation(birth_place, longitude, latitude)
-        time_str = format_vedastro_time(birth_date, birth_time, utc_offset)
-        birth_time_obj = Time(time_str, geo)
+        """使用 pyswisseph 進行精確吠陀計算（Lahiri Ayanamsa）。"""
+        swe.set_ephe_path("")
+        swe.set_sid_mode(swe.SIDM_LAHIRI)
 
-        # Lagna
-        lagna_result = Calculate.LagnaSignName(birth_time_obj)
-        result.lagna_sign = self._match_sign(str(lagna_result).strip())
+        # 解析日期時間
+        year, month, day = (int(x) for x in birth_date.split("-"))
+        hour, minute = (int(x) for x in birth_time.split(":"))
 
-        # Moon sign
-        moon_result = Calculate.MoonSignName(birth_time_obj)
-        result.moon_sign = self._match_sign(str(moon_result).strip())
+        # 解析 UTC 偏移
+        offset_sign = 1 if utc_offset.startswith("+") else -1
+        offset_parts = utc_offset.lstrip("+-").split(":")
+        tz_hours = offset_sign * (
+            int(offset_parts[0]) + int(offset_parts[1]) / 60.0
+        )
 
-        # 九曜行星
-        planets = [
-            PlanetName.Sun, PlanetName.Moon, PlanetName.Mars,
-            PlanetName.Mercury, PlanetName.Jupiter,
-            PlanetName.Venus, PlanetName.Saturn,
-            PlanetName.Rahu, PlanetName.Ketu,
-        ]
-        for p_obj, p_name in zip(planets, PLANET_NAMES_EN):
-            try:
-                sign_result = Calculate.PlanetRasiD1Sign(p_obj, birth_time_obj)
-                matched_sign = self._match_sign(str(sign_result).strip())
+        # 計算 Julian Day（轉為 UTC）
+        decimal_hour = hour + minute / 60.0 - tz_hours
+        jd = swe.julday(year, month, day, decimal_hour)
 
-                strength_str = "—"
-                try:
-                    strength_result = Calculate.PlanetPowerPercentage(
-                        p_obj, birth_time_obj
-                    )
-                    strength_str = str(strength_result).strip()
-                except Exception:
-                    pass
+        # 計算恆星黃道宮位（Placidus 宮位制）
+        cusps, ascmc = swe.houses_ex(
+            jd, latitude, longitude, b"P", swe.FLG_SIDEREAL,
+        )
+        ascendant = ascmc[0] % 360.0
 
-                result.planet_info.append({
-                    "行星": PLANET_ZH.get(p_name, p_name),
-                    "所在星座": ZODIAC_ZH.get(matched_sign, matched_sign),
-                    "Vastu 方位": PLANET_DIRECTION.get(p_name, "—"),
-                    "力量": strength_str,
-                })
-            except Exception:
-                result.planet_info.append({
-                    "行星": PLANET_ZH.get(p_name, p_name),
-                    "所在星座": "（計算中出現問題）",
-                    "Vastu 方位": PLANET_DIRECTION.get(p_name, "—"),
-                    "力量": "—",
-                })
+        # Lagna（上升星座）
+        result.lagna_sign = _SIGNS[int(ascendant / 30.0) % 12]
+
+        # 九曜行星位置
+        for p_name in PLANET_NAMES_EN:
+            if p_name in _SWE_PLANETS:
+                res, _ = swe.calc_ut(
+                    jd, _SWE_PLANETS[p_name], swe.FLG_SIDEREAL,
+                )
+                lon = res[0] % 360.0
+                sign = _SIGNS[int(lon / 30.0) % 12]
+            elif p_name == "Rahu":
+                res, _ = swe.calc_ut(jd, swe.MEAN_NODE, swe.FLG_SIDEREAL)
+                lon = res[0] % 360.0
+                sign = _SIGNS[int(lon / 30.0) % 12]
+            elif p_name == "Ketu":
+                res, _ = swe.calc_ut(jd, swe.MEAN_NODE, swe.FLG_SIDEREAL)
+                lon = (res[0] + 180.0) % 360.0
+                sign = _SIGNS[int(lon / 30.0) % 12]
+            else:
+                sign = "—"
+
+            # 取得月亮星座
+            if p_name == "Moon":
+                result.moon_sign = sign
+
+            result.planet_info.append({
+                "行星": PLANET_ZH.get(p_name, p_name),
+                "所在星座": ZODIAC_ZH.get(sign, sign),
+                "Vastu 方位": PLANET_DIRECTION.get(p_name, "—"),
+                "力量": "—",
+            })
 
         result.used_vedastro = True
         result.messages.append(
-            "✅ 已使用 VedAstro 庫進行精確吠陀計算（Lahiri Ayanamsa）。"
+            "✅ 已使用 pyswisseph 進行精確吠陀計算（Lahiri Ayanamsa）。"
         )
 
     # ------------------------------------------------------------------
@@ -215,7 +241,7 @@ class AstroCalculator:
         for p_name in PLANET_NAMES_EN:
             result.planet_info.append({
                 "行星": PLANET_ZH.get(p_name, p_name),
-                "所在星座": "（需 VedAstro 精確計算）",
+                "所在星座": "（需 pyswisseph 精確計算）",
                 "Vastu 方位": PLANET_DIRECTION.get(p_name, "—"),
                 "力量": "—",
             })
@@ -225,14 +251,6 @@ class AstroCalculator:
     # ------------------------------------------------------------------
     # 輔助方法
     # ------------------------------------------------------------------
-    @staticmethod
-    def _match_sign(raw: str) -> str:
-        """從 VedAstro 回傳值中比對星座英文名稱。"""
-        for zn in ZODIAC_ZH:
-            if zn.lower() in raw.lower():
-                return zn
-        return raw
-
     @staticmethod
     def _fallback_lagna(birth_time: str) -> str:
         """根據出生時間粗略推估上升星座（Fallback）。

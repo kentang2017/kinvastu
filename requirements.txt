@@ -1,3 +1,4 @@
 pandas
 tabulate
 streamlit>=1.24.0
+pyswisseph>=2.10
