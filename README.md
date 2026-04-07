@@ -17,6 +17,20 @@ pip install pandas tabulate
 pip install vedastro
 ```
 
+## 🖥️ Streamlit 互動介面
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+啟動後瀏覽器會自動開啟，提供兩大功能：
+
+| 功能 | 說明 |
+|------|------|
+| 🏛️ Vastu 方位表格 | 瀏覽八大 / 十六方位 Vastu Shastra 詳解表 |
+| 🪐 個人化 Astro-Vastu | 輸入出生資料，取得個人化風水命盤分析報告 |
+
 ## 🚀 快速開始
 
 ```python
@@ -67,6 +81,8 @@ personalized_astro_vastu(
 ## 📁 專案結構
 
 ```
+requirements.txt           # Python 依賴清單
+streamlit_app.py           # Streamlit 互動介面入口
 astro_vastu/
 ├── __init__.py            # 套件入口、版本資訊、相容性重新匯出
 ├── config.py              # 全域設定（AppSettings dataclass）
