@@ -50,10 +50,18 @@ PLANET_DIRECTION: dict[str, str] = {
 
 # ---------- 星座 → 元素 ----------
 SIGN_ELEMENT: dict[str, str] = {
-    "Aries": "火", "Leo": "火", "Sagittarius": "火",
-    "Taurus": "土", "Virgo": "土", "Capricorn": "土",
-    "Gemini": "風", "Libra": "風", "Aquarius": "風",
-    "Cancer": "水", "Scorpio": "水", "Pisces": "水",
+    "Aries": "火",
+    "Taurus": "土",
+    "Gemini": "風",
+    "Cancer": "水",
+    "Leo": "火",
+    "Virgo": "土",
+    "Libra": "風",
+    "Scorpio": "水",
+    "Sagittarius": "火",
+    "Capricorn": "土",
+    "Aquarius": "風",
+    "Pisces": "水",
 }
 
 # ---------- 上升星座 → 推薦房屋朝向 ----------

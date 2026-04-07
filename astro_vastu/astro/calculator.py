@@ -20,7 +20,7 @@ VedAstro 為可選依賴。若未安裝或 API 呼叫失敗，
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Optional
 
 from astro_vastu.astro.mappings import (
     MOON_SIGNS_BY_MONTH,
@@ -88,7 +88,7 @@ class AstroCalculator:
         birth_place: str,
         latitude: float,
         longitude: float,
-        utc_offset: str | None = None,
+        utc_offset: Optional[str] = None,
     ) -> AstroResult:
         """執行占星計算。
 

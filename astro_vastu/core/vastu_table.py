@@ -31,8 +31,8 @@ def detailed_vastu_table(
     directions: int = 8,
     *,
     output: str = "console",
-    wrap_width: int | None = None,
-    data_path: Path | str | None = None,
+    wrap_width: Optional[int] = None,
+    data_path: Optional[Path | str] = None,
 ) -> Optional[pd.DataFrame]:
     """產生超詳細的 Vastu Shastra 方位表格。
 
