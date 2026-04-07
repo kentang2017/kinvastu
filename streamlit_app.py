@@ -37,12 +37,12 @@ from astro_vastu.utils.time_utils import (
 
 # ─── 頁面設定 ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="🕉️ 堅瓦斯圖 Kinvastu — 印度吠陀風水",
+    page_title="堅瓦斯圖 Kinvastu — 印度吠陀風水",
     page_icon="🕉️",
     layout="wide",
 )
 
-st.title("🕉️ 堅瓦斯圖 Kinvastu — 印度吠陀風水")
+st.title("堅瓦斯圖 Kinvastu — 印度吠陀風水")
 st.caption("結合 Vastu Shastra（印度建築風水）與 Vedic Jyotish（吠陀占星）")
 
 # ─── 側邊欄導覽 ───────────────────────────────────────────
