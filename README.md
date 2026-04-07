@@ -1,4 +1,4 @@
-# 🕉️ astro_vastu — 超級進階 Astro-Vastu 模組
+# 🕉️ 堅瓦斯圖 Kinvastu — 印度風水
 
 > 結合 **Vastu Shastra**（印度建築風水）與 **Vedic Jyotish**（吠陀占星），提供八大方位 / 十六方位的 Vastu 詳解表格，以及根據個人命盤的個人化居家風水建議。
 
