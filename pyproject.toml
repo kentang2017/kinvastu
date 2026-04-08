@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kinvastu"
+version = "2.1.0"
+description = "堅瓦斯圖 Kinvastu — 結合 Vastu Shastra（印度建築風水）與 Vedic Jyotish（吠陀占星）的 Python 工具"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "kentang2017"},
+]
+keywords = ["vastu", "shastra", "jyotish", "vedic", "astrology", "feng-shui", "indian"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "pandas",
+    "tabulate",
+]
+
+[project.optional-dependencies]
+astro = ["pyswisseph>=2.10"]
+streamlit = [
+    "streamlit>=1.24.0",
+    "pyswisseph>=2.10",
+]
+dev = [
+    "pyswisseph>=2.10",
+    "streamlit>=1.24.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/kentang2017/kinvastu"
+Repository = "https://github.com/kentang2017/kinvastu"
+Issues = "https://github.com/kentang2017/kinvastu/issues"
+
+[tool.setuptools.packages.find]
+include = ["astro_vastu*"]
+
+[tool.setuptools.package-data]
+"astro_vastu" = ["data/*.json"]
