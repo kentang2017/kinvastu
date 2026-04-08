@@ -1,3 +1,36 @@
+Metadata-Version: 2.4
+Name: kinvastu
+Version: 2.1.0
+Summary: 堅瓦斯圖 Kinvastu — 結合 Vastu Shastra（印度建築風水）與 Vedic Jyotish（吠陀占星）的 Python 工具
+Author: kentang2017
+License: MIT
+Project-URL: Homepage, https://github.com/kentang2017/kinvastu
+Project-URL: Repository, https://github.com/kentang2017/kinvastu
+Project-URL: Issues, https://github.com/kentang2017/kinvastu/issues
+Keywords: vastu,shastra,jyotish,vedic,astrology,feng-shui,indian
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pandas
+Requires-Dist: tabulate
+Provides-Extra: astro
+Requires-Dist: pyswisseph>=2.10; extra == "astro"
+Provides-Extra: streamlit
+Requires-Dist: streamlit>=1.24.0; extra == "streamlit"
+Requires-Dist: pyswisseph>=2.10; extra == "streamlit"
+Provides-Extra: dev
+Requires-Dist: pyswisseph>=2.10; extra == "dev"
+Requires-Dist: streamlit>=1.24.0; extra == "dev"
+
 # 🕉️ 堅瓦斯圖 Kinvastu — 印度吠陀風水
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)

@@ -46,11 +46,13 @@ __license__ = "MIT"
 # 讓 from astro_vastu import detailed_vastu_table 等舊有呼叫方式繼續有效
 from astro_vastu.core.vastu_table import detailed_vastu_table  # noqa: F401
 from astro_vastu.personalized import personalized_astro_vastu  # noqa: F401
+from astro_vastu.personalized import room_placement_recommendations  # noqa: F401
 from astro_vastu.main import main  # noqa: F401
 
 __all__ = [
     "__version__",
     "detailed_vastu_table",
     "personalized_astro_vastu",
+    "room_placement_recommendations",
     "main",
 ]
