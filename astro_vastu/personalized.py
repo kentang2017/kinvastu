@@ -315,4 +315,4 @@ def room_placement_recommendations(
     Returns:
         房間配置建議列表，每項包含房間、最佳方位、說明、補救。
     """
-    return list(_ROOM_PLACEMENT.get(lagna_sign, _ROOM_PLACEMENT["Aries"]))
+    return list(_ROOM_PLACEMENT.get(lagna_sign, []))

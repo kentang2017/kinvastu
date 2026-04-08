@@ -155,21 +155,26 @@ with tab1:
     if df is not None:
         # 加入 Emoji 方位指示
         _dir_emoji: dict[str, str] = {
-            "East": "☀️", "South-East": "🔥", "South": "🛡️", "South-West": "⚓",
-            "West": "🌊", "North-West": "💨", "North": "💰", "North-East": "🕉️",
             "East-NorthEast": "🌅", "East-SouthEast": "🔥", "South-SouthEast": "⚔️",
             "South-SouthWest": "🪨", "West-SouthWest": "📚", "West-NorthWest": "🧹",
             "North-NorthWest": "🤝", "North-NorthEast": "✨",
+            "South-East": "🔥", "South-West": "⚓",
+            "North-West": "💨", "North-East": "🕉️",
+            "East": "☀️", "South": "🛡️",
+            "West": "🌊", "North": "💰",
         }
         display_df = df.copy()
 
-        # 在方向欄前加 Emoji
+        # 在方向欄前加 Emoji（優先匹配較長的鍵名）
         if "方向 (Direction)" in display_df.columns:
+            def _add_emoji(x: str) -> str:
+                for key, emoji in _dir_emoji.items():
+                    if key in x:
+                        return f"{emoji} {x}"
+                return x
+
             display_df["方向 (Direction)"] = display_df["方向 (Direction)"].apply(
-                lambda x: next(
-                    (f"{emoji} {x}" for key, emoji in _dir_emoji.items() if key in x),
-                    x,
-                )
+                _add_emoji
             )
 
         st.dataframe(display_df, use_container_width=True, hide_index=True)
